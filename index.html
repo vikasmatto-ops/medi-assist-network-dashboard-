@@ -239,11 +239,11 @@ function buildKPI(){
   });
   var totPPN=0;
   Object.keys(ppn).forEach(function(k){totPPN+=ppn[k];});
-  var html='<div class="kc active" id="kc-All" onclick="fcity('All')"><div class="kc-name">All Cities</div><div class="kc-num">'+DATA.length.toLocaleString()+'</div><div class="kc-ppn">'+totPPN+' PPN</div></div>';
+  var html='<div class="kc active" id="kc-All" onclick="fcity(this)"><div class="kc-name">All Cities</div><div class="kc-num">'+DATA.length.toLocaleString()+'</div><div class="kc-ppn">'+totPPN+' PPN</div></div>';
   cities.forEach(function(c){
     var col=CC[c]||'#3b82f6';
     var cid=c.replace(/ /g,'_');
-    html+='<div class="kc" id="kc-'+cid+'" onclick="fcity(''+c+'')"><div class="kc-name" style="color:'+col+'">'+c+'</div><div class="kc-num">'+((cnt[c]||0).toLocaleString())+'</div><div class="kc-ppn">'+((ppn[c]||0))+' PPN</div></div>';
+    html+='<div class="kc" id="kc-'+cid+'" onclick="fcity(this)"><div class="kc-name" style="color:'+col+'">'+c+'</div><div class="kc-num">'+((cnt[c]||0).toLocaleString())+'</div><div class="kc-ppn">'+((ppn[c]||0))+' PPN</div></div>';
   });
   document.getElementById('kpi-strip').innerHTML=html;
   document.getElementById('total-badge').textContent=DATA.length.toLocaleString()+' Hospitals';
@@ -251,12 +251,13 @@ function buildKPI(){
 
 function setActive(city){
   document.querySelectorAll('.kc').forEach(function(el){el.classList.remove('active');});
-  var id='kc-'+(city||'All').replace(/ /g,'_');
+  var id='kc-'+(city&&city.length?city:'All').replace(/ /g,'_');
   var el=document.getElementById(id);
   if(el)el.classList.add('active');
 }
 
-function fcity(c){
+function fcity(el){
+  var c=el.id.replace('kc-','').replace(/_/g,' ');
   document.getElementById('q-city').value=(c==='All'?'':c);
   applyF();
 }
